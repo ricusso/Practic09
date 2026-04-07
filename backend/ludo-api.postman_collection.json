@@ -1,0 +1,244 @@
+{
+  "info": {
+    "name": "АКТИВ Platform API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [{ "key": "base", "value": "http://localhost:3001" }],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Регистрация",
+          "request": {
+            "method": "POST",
+            "url": "{{base}}/api/auth/register",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"username\":\"TestUser\",\"email\":\"test@АКТИВ.ru\",\"password\":\"password123\",\"role\":\"user\"}"
+            }
+          }
+        },
+        {
+          "name": "Вход",
+          "request": {
+            "method": "POST",
+            "url": "{{base}}/api/auth/login",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"email\":\"alex@АКТИВ.ru\",\"password\":\"password123\"}"
+            }
+          }
+        },
+        {
+          "name": "Я (me)",
+          "request": { "method": "GET", "url": "{{base}}/api/auth/me" }
+        },
+        {
+          "name": "Выход",
+          "request": { "method": "POST", "url": "{{base}}/api/auth/logout" }
+        }
+      ]
+    },
+    {
+      "name": "Quests",
+      "item": [
+        {
+          "name": "Каталог",
+          "request": {
+            "method": "GET",
+            "url": "{{base}}/api/quests?sort=new&limit=20"
+          }
+        },
+        {
+          "name": "Мои (активные)",
+          "request": {
+            "method": "GET",
+            "url": "{{base}}/api/quests/my?status=active"
+          }
+        },
+        {
+          "name": "Доступные",
+          "request": {
+            "method": "GET",
+            "url": "{{base}}/api/quests/my?status=available"
+          }
+        },
+        {
+          "name": "Детали",
+          "request": { "method": "GET", "url": "{{base}}/api/quests/1" }
+        },
+        {
+          "name": "Создать",
+          "request": {
+            "method": "POST",
+            "url": "{{base}}/api/quests",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"title\":\"Мой квест\",\"category\":\"Разработка\",\"duration_days\":21,\"xp_reward\":300}"
+            }
+          }
+        },
+        {
+          "name": "Вступить",
+          "request": { "method": "POST", "url": "{{base}}/api/quests/3/join" }
+        },
+        {
+          "name": "Отметка",
+          "request": {
+            "method": "POST",
+            "url": "{{base}}/api/quests/1/checkin",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"note\":\"Написал 50 строк кода!\"}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Experts",
+      "item": [
+        {
+          "name": "Каталог",
+          "request": {
+            "method": "GET",
+            "url": "{{base}}/api/experts?sort=rating"
+          }
+        },
+        {
+          "name": "Профиль",
+          "request": { "method": "GET", "url": "{{base}}/api/experts/1" }
+        },
+        {
+          "name": "Записаться",
+          "request": { "method": "POST", "url": "{{base}}/api/experts/1/book" }
+        },
+        {
+          "name": "Отзывы",
+          "request": {
+            "method": "GET",
+            "url": "{{base}}/api/experts/1/reviews"
+          }
+        },
+        {
+          "name": "Оставить отзыв",
+          "request": {
+            "method": "POST",
+            "url": "{{base}}/api/experts/1/reviews",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"rating\":5,\"text\":\"Отличный наставник!\"}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Leaderboard",
+      "item": [
+        {
+          "name": "Всё время",
+          "request": {
+            "method": "GET",
+            "url": "{{base}}/api/leaderboard?period=all"
+          }
+        },
+        {
+          "name": "За неделю",
+          "request": {
+            "method": "GET",
+            "url": "{{base}}/api/leaderboard?period=week"
+          }
+        },
+        {
+          "name": "За месяц",
+          "request": {
+            "method": "GET",
+            "url": "{{base}}/api/leaderboard?period=month"
+          }
+        },
+        {
+          "name": "Топ-3",
+          "request": { "method": "GET", "url": "{{base}}/api/leaderboard/top3" }
+        }
+      ]
+    },
+    {
+      "name": "Notifications",
+      "item": [
+        {
+          "name": "Список",
+          "request": { "method": "GET", "url": "{{base}}/api/notifications" }
+        },
+        {
+          "name": "Счётчик",
+          "request": {
+            "method": "GET",
+            "url": "{{base}}/api/notifications/unread-count"
+          }
+        },
+        {
+          "name": "Прочитать все",
+          "request": {
+            "method": "PUT",
+            "url": "{{base}}/api/notifications/read-all"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Stats",
+      "item": [
+        {
+          "name": "Платформа",
+          "request": { "method": "GET", "url": "{{base}}/api/stats/platform" }
+        }
+      ]
+    },
+    {
+      "name": "Support",
+      "item": [
+        {
+          "name": "Создать тикет",
+          "request": {
+            "method": "POST",
+            "url": "{{base}}/api/support/tickets",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"subject\":\"Не начисляется XP\",\"message\":\"Сделал отметку, но XP не добавился уже 2 дня.\"}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Профиль",
+          "request": { "method": "GET", "url": "{{base}}/api/users/1" }
+        },
+        {
+          "name": "Статистика",
+          "request": { "method": "GET", "url": "{{base}}/api/users/1/stats" }
+        },
+        {
+          "name": "Обновить",
+          "request": {
+            "method": "PUT",
+            "url": "{{base}}/api/users/1",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\"avatar_color\":\"#b088d0\"}" }
+          }
+        }
+      ]
+    }
+  ]
+}

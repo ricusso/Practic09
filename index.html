@@ -1,0 +1,573 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=5.0"
+    />
+    <title>АКТИВ — Immersion RPG</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Unbounded:wght@400;600;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #050508;
+        --surface: #0f0f14;
+        --pink: #e8a8d8;
+        --purple: #b088d0;
+        --text: #f0f0f6;
+        --text2: #8888a0;
+        --text3: #505062;
+        --border: rgba(255, 255, 255, 0.05);
+        --r: 32px;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        cursor: none !important;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: "Plus Jakarta Sans", sans-serif;
+        line-height: 1.6;
+        overflow-x: hidden;
+      }
+
+      /* ══ CUSTOM CURSOR ══ */
+      .cursor-dot {
+        width: 8px;
+        height: 8px;
+        background: #fff;
+        position: fixed;
+        border-radius: 50%;
+        z-index: 10000;
+        pointer-events: none;
+        transition: transform 0.1s;
+      }
+      .cursor-outline {
+        width: 40px;
+        height: 40px;
+        border: 2px solid var(--pink);
+        position: fixed;
+        border-radius: 50%;
+        z-index: 9999;
+        pointer-events: none;
+        transition: all 0.15s cubic-bezier(0.23, 1, 0.32, 1);
+        background: rgba(232, 168, 216, 0.05);
+      }
+
+      /* ══ DYNAMIC BACKGROUND ══ */
+      .blobs {
+        position: fixed;
+        inset: 0;
+        z-index: -3;
+        filter: blur(140px);
+        opacity: 0.25;
+        pointer-events: none;
+      }
+      .blob {
+        position: absolute;
+        border-radius: 50%;
+        transition: transform 0.5s cubic-bezier(0.1, 0, 0.3, 1);
+      }
+      .b1 {
+        width: 80vw;
+        height: 80vw;
+        background: var(--pink);
+        top: -20%;
+        left: -20%;
+      }
+      .b2 {
+        width: 60vw;
+        height: 60vw;
+        background: var(--purple);
+        bottom: -10%;
+        right: -10%;
+      }
+
+      /* ══ FLOATING REVIEWS BACKGROUND ══ */
+      .reviews-bg {
+        position: fixed;
+        inset: 0;
+        z-index: -2;
+        pointer-events: none;
+        overflow: hidden;
+      }
+      .f-review {
+        position: absolute;
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 20px 24px;
+        border-radius: 20px;
+        width: 320px;
+        opacity: 0;
+        animation: floatReview 18s linear infinite;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+      .f-review-text {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 8px;
+        line-height: 1.4;
+      }
+      .f-review-user {
+        font-size: 11px;
+        font-weight: 800;
+        color: var(--pink);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      @keyframes floatReview {
+        0% {
+          transform: translateY(110vh) rotate(0deg);
+          opacity: 0;
+        }
+        10% {
+          opacity: 0.4;
+        }
+        90% {
+          opacity: 0.4;
+        }
+        100% {
+          transform: translateY(-20vh) rotate(10deg);
+          opacity: 0;
+        }
+      }
+
+      /* ══ HERO SECTION ══ */
+      .hero {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 120px 5% 60px;
+        position: relative;
+        z-index: 1;
+      }
+      .badge-intro {
+        background: rgba(232, 168, 216, 0.1);
+        color: var(--pink);
+        padding: 8px 20px;
+        border-radius: 50px;
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
+        border: 1px solid rgba(232, 168, 216, 0.2);
+        margin-bottom: 32px;
+        letter-spacing: 0.2em;
+        animation: fadeInDown 1s ease both;
+      }
+      .hero h1 {
+        font-family: "Unbounded", sans-serif;
+        font-size: clamp(42px, 12vw, 120px);
+        line-height: 0.85;
+        margin-bottom: 32px;
+        font-weight: 900;
+        letter-spacing: -0.06em;
+        animation: heroReveal 1.5s cubic-bezier(0.23, 1, 0.32, 1) both;
+      }
+      .hero h1 span {
+        background: linear-gradient(
+          135deg,
+          var(--pink),
+          var(--purple),
+          var(--pink)
+        );
+        background-size: 200% auto;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: shimmer 4s linear infinite;
+      }
+      @keyframes shimmer {
+        to {
+          background-position: 200% center;
+        }
+      }
+
+      .hero p {
+        max-width: 600px;
+        color: var(--text2);
+        font-size: clamp(16px, 4vw, 20px);
+        margin-bottom: 56px;
+        animation: fadeInUp 1s ease both 0.6s;
+        opacity: 0.8;
+      }
+      .hero-btns {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        justify-content: center;
+        animation: fadeInUp 1s ease both 0.9s;
+      }
+      .btn-primary {
+        background: linear-gradient(135deg, var(--pink), var(--purple));
+        color: #000;
+        padding: 20px 50px;
+        border-radius: 20px;
+        font-weight: 900;
+        text-decoration: none;
+        font-size: 17px;
+        transition: all 0.3s;
+        box-shadow: 0 15px 35px rgba(232, 168, 216, 0.3);
+      }
+      .btn-secondary {
+        border: 1px solid var(--border);
+        background: rgba(255, 255, 255, 0.02);
+        color: var(--text);
+        padding: 20px 50px;
+        border-radius: 20px;
+        font-weight: 900;
+        text-decoration: none;
+        font-size: 17px;
+        transition: all 0.3s;
+        backdrop-filter: blur(10px);
+      }
+
+      /* ══ MECHANICS ══ */
+      .section-title {
+        text-align: center;
+        margin: 120px 0 60px;
+        padding: 0 5%;
+        position: relative;
+        z-index: 1;
+      }
+      .section-title h2 {
+        font-family: "Unbounded", sans-serif;
+        font-size: clamp(32px, 8vw, 48px);
+        margin-bottom: 16px;
+      }
+
+      .mechanics {
+        padding: 0 5% 150px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 32px;
+        perspective: 1000px;
+        position: relative;
+        z-index: 1;
+      }
+      .m-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        padding: 50px 40px;
+        border-radius: var(--r);
+        position: relative;
+        overflow: hidden;
+        transition:
+          transform 0.1s ease-out,
+          border-color 0.4s;
+        min-height: 460px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        opacity: 0;
+        transform: translateY(60px);
+        transform-style: preserve-3d;
+      }
+      .m-card.active {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .m-video-bg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 0;
+        opacity: 0.1;
+        transition: all 0.8s ease;
+        filter: grayscale(100%) brightness(0.6);
+        pointer-events: none;
+      }
+      .m-card:hover .m-video-bg {
+        opacity: 0.45;
+        filter: grayscale(0%) brightness(1);
+        transform: scale(1.1) translateZ(20px);
+      }
+
+      .m-overlay {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        background: linear-gradient(to top, var(--bg) 15%, transparent 100%);
+      }
+
+      .m-content {
+        position: relative;
+        z-index: 2;
+        transform: translateZ(50px);
+      }
+
+      .m-number {
+        position: absolute;
+        top: 32px;
+        left: 32px;
+        font-family: "Unbounded", sans-serif;
+        font-size: 80px;
+        font-weight: 900;
+        color: rgba(255, 255, 255, 0.03);
+        z-index: 1;
+        transform: translateZ(30px);
+      }
+
+      @media (max-width: 1024px) {
+        .mechanics {
+          grid-template-columns: 1fr;
+        }
+        .m-card {
+          min-height: 380px;
+        }
+        * {
+          cursor: auto !important;
+        }
+        .cursor-dot,
+        .cursor-outline {
+          display: none;
+        }
+      }
+
+      @keyframes fadeInDown {
+        from {
+          opacity: 0;
+          transform: translateY(-30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(40px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes heroReveal {
+        0% {
+          opacity: 0;
+          transform: translateY(100px);
+          filter: blur(20px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+          filter: blur(0);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="cursor-dot" id="cursorDot"></div>
+    <div class="cursor-outline" id="cursorOutline"></div>
+
+    <div class="reviews-bg" id="reviewBg"></div>
+
+    <div class="blobs">
+      <div class="blob b1" id="blob1"></div>
+      <div class="blob b2" id="blob2"></div>
+    </div>
+
+    <section class="hero">
+      <div class="badge-intro">Neural Evolution Protocol</div>
+      <h1>Твоя жизнь <span>в формате RPG</span></h1>
+      <p>
+        АКТИВ превращает рутину в захватывающее приключение. Прокачивай свои
+        навыки, открывай новые горизонты и стань лучшей версией себя.
+      </p>
+      <div class="hero-btns">
+        <a href="auth.html" class="btn-primary">Начать игру</a>
+        <a href="#mechanics" class="btn-secondary">Исследовать</a>
+      </div>
+    </section>
+
+    <section class="section-title reveal" id="mechanics">
+      <h2>Механика системы</h2>
+      <p>Три уровня трансформации реальности</p>
+    </section>
+
+    <section class="mechanics">
+      <div class="m-card reveal" data-tilt>
+        <video class="m-video-bg" autoplay muted loop playsinline>
+          <source
+            src="https://videos.pexels.com/video-files/4367440/4367440-hd_1280_720_30fps.mp4"
+            type="video/mp4"
+          />
+        </video>
+        <div class="m-overlay"></div>
+        <div class="m-number">01</div>
+        <div class="m-content">
+          <h3>Выбирай квесты</h3>
+          <p>
+            Вступай в челленджи от сообщества или авторские программы экспертов.
+          </p>
+        </div>
+      </div>
+
+      <div class="m-card reveal" data-tilt>
+        <video class="m-video-bg" autoplay muted loop playsinline>
+          <source
+            src="https://videos.pexels.com/video-files/4367572/4367572-hd_1280_720_30fps.mp4"
+            type="video/mp4"
+          />
+        </video>
+        <div class="m-overlay"></div>
+        <div class="m-number">02</div>
+        <div class="m-content">
+          <h3>Действуй</h3>
+          <p>
+            Фиксируй результаты через видео-отчеты. Получай XP в реальном
+            времени.
+          </p>
+        </div>
+      </div>
+
+      <div class="m-card reveal" data-tilt>
+        <video class="m-video-bg" autoplay muted loop playsinline>
+          <source
+            src="https://videos.pexels.com/video-files/4367574/4367574-hd_1280_720_30fps.mp4"
+            type="video/mp4"
+          />
+        </video>
+        <div class="m-overlay"></div>
+        <div class="m-number">03</div>
+        <div class="m-content">
+          <h3>Доминируй</h3>
+          <p>
+            Открывай редкие достижения и занимай вершины в Зале Славы АКТИВ.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <script>
+      // REVIEW SPAWNER
+      const reviews = [
+        { text: "Наконец-то наладил режим сна! +500 XP", user: "Gamer_One" },
+        {
+          text: "Артем — гениальный наставник. Детокс работает.",
+          user: "Sofi_Pro",
+        },
+        {
+          text: "21 день кода пройден. Уровень 15 достигнут!",
+          user: "DevRunner",
+        },
+        { text: "Лучший трекер, что я пробовал. RPG рулит.", user: "Max_Aura" },
+        { text: "Видео-отчеты реально дисциплинируют.", user: "Rick_Neo" },
+        { text: "Вчера взял ачивку 'Ранняя пташка'!", user: "Anna_K" },
+      ];
+
+      function spawnReview() {
+        const container = document.getElementById("reviewBg");
+        const review = reviews[Math.floor(Math.random() * reviews.length)];
+        const el = document.createElement("div");
+        el.className = "f-review";
+
+        // Randomize position and scale for depth
+        const scale = Math.random() * 0.4 + 0.8;
+        el.style.left = Math.random() * 90 + 2 + "%";
+        el.style.transform = `scale(${scale})`;
+        el.style.animationDuration = Math.random() * 8 + 12 + "s";
+        el.style.filter = `blur(${Math.random() * 2}px)`;
+
+        el.innerHTML = `
+      <div class="f-review-text">${review.text}</div>
+      <div class="f-review-user">@${review.user}</div>
+    `;
+        container.appendChild(el);
+        setTimeout(() => el.remove(), 15000);
+      }
+
+
+      setInterval(spawnReview, 1200);
+          
+      for (let i = 0; i < 12; i++) setTimeout(spawnReview, i * 300);
+
+  
+      const dot = document.getElementById("cursorDot");
+      const outline = document.getElementById("cursorOutline");
+
+      document.addEventListener("mousemove", (e) => {
+        dot.style.left = e.clientX + "px";
+        dot.style.top = e.clientY + "px";
+
+        outline.animate(
+          {
+            left: e.clientX + "px",
+            top: e.clientY + "px",
+          },
+          { duration: 500, fill: "forwards" },
+        );
+
+        const x = e.clientX / window.innerWidth;
+        const y = e.clientY / window.innerHeight;
+        document.getElementById("blob1").style.transform =
+          `translate(${x * 60}px, ${y * 60}px)`;
+        document.getElementById("blob2").style.transform =
+          `translate(${x * -60}px, ${y * -60}px)`;
+      });
+
+      document.querySelectorAll("a, button, .m-card").forEach((el) => {
+        el.addEventListener("mouseenter", () => {
+          outline.style.transform = "scale(1.5)";
+          outline.style.borderColor = "#fff";
+          outline.style.background = "rgba(255,255,255,0.1)";
+        });
+        el.addEventListener("mouseleave", () => {
+          outline.style.transform = "scale(1)";
+          outline.style.borderColor = "var(--pink)";
+          outline.style.background = "rgba(232,168,216,0.05)";
+        });
+      });
+
+      // 3D TILT EFFECT
+      document.querySelectorAll("[data-tilt]").forEach((card) => {
+        card.addEventListener("mousemove", (e) => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          const xc = rect.width / 2;
+          const yc = rect.height / 2;
+          const dx = x - xc;
+          const dy = y - yc;
+          card.style.transform = `rotateY(${dx / 10}deg) rotateX(${-dy / 10}deg)`;
+        });
+        card.addEventListener("mouseleave", () => {
+          card.style.transform = "rotateY(0) rotateX(0)";
+        });
+      });
+
+      // REVEAL ANIMATION
+      function reveal() {
+        var reveals = document.querySelectorAll(".reveal");
+        for (var i = 0; i < reveals.length; i++) {
+          var windowHeight = window.innerHeight;
+          var elementTop = reveals[i].getBoundingClientRect().top;
+          if (elementTop < windowHeight - 100) {
+            reveals[i].classList.add("active");
+          }
+        }
+      }
+      window.addEventListener("scroll", reveal);
+      reveal();
+    </script>
+  </body>
+</html>
